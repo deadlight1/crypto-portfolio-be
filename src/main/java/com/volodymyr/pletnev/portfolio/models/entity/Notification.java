@@ -22,12 +22,6 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Notification extends AbstractEntity implements Serializable {
-	@ManyToOne
-	@JoinColumn(name = "coin_id")
-	private Coin coin;
-	@ManyToOne
-	@JoinColumn(name = "user_id")
-	private User user;
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "exchange_order_id")
 	private ExchangeOrder exchangeOrder;

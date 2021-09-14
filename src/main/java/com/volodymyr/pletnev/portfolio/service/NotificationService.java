@@ -34,23 +34,14 @@ public class NotificationService {
 	private static final CryptoPortfolioModelMapper MODEL_MAPPER = CryptoPortfolioModelMapper.INSTANCE;
 
 	// todo refactor to service layer
-
 	private final NotificationRepository notificationRepository;
-	private final UserRepository userRepository;
-	private final CoinRepository coinRepository;
 	private final OrderServiceImpl orderService;
 	private final RestTemplate restTemplate;
 
 	@Transactional
 	public Notification create(NotificationRequest notificationRequest) {
 		Notification notification = MODEL_MAPPER.toEntity(notificationRequest);
-		User user = userRepository.findById(currentId())
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, USER_NOT_FOUND.name()));
 		ExchangeOrder exchangeOrder = orderService.getById(notificationRequest.getOrderId());
-		Coin coin = coinRepository.findById(notificationRequest.getCoinId())
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Coin not found"));
-		notification.setCoin(coin);
-		notification.setUser(user);
 		notification.setExchangeOrder(exchangeOrder);
 		return notificationRepository.save(notification);
 	}

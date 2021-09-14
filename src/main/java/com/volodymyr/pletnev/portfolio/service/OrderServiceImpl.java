@@ -147,7 +147,6 @@ public class OrderServiceImpl extends PartialUpdatingService {
 		List<Notification> notifications = notificationRepository.findAllByExchangeOrderId(id);
 		notifications.forEach(notification -> {
 			notification.setExchangeOrder(null);
-			notification.setUser(null);
 		});
 		notificationRepository.saveAll(notifications);
 		notificationRepository.deleteAllByExchangeOrderId(id);

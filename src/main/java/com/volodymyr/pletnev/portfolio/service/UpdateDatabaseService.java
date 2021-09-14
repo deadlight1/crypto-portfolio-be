@@ -48,8 +48,8 @@ public class UpdateDatabaseService {
 
 	private static final String uri = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?start=1&limit=5000&convert=USD";
 
-
-	@Scheduled(fixedDelay = 1500000)
+	// disabled 1500000
+	//@Scheduled(fixedDelay = 150000000)
 	@Transactional
 	public void updateCoinsEveryHour() {
 		log.info("START UPDATE COINS");
@@ -65,7 +65,6 @@ public class UpdateDatabaseService {
 		ResponseEntity<Data> responseEntity = restTemplate.exchange(uri, HttpMethod.GET, request, Data.class);
 		if (responseEntity.getStatusCode().is2xxSuccessful()) {
 			Data data = responseEntity.getBody();
-			log.info("Data is: {}", data);
 			if (data != null) {
 				List<Coin> coinEntities = data.getData().stream()
 						.map((coinResp) -> new Coin(coinResp.getId(),
