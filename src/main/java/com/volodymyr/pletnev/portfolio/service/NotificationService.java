@@ -1,18 +1,11 @@
 package com.volodymyr.pletnev.portfolio.service;
 
-import static com.volodymyr.pletnev.portfolio.models.enums.ResponseStatusMessage.USER_NOT_FOUND;
-import static com.volodymyr.pletnev.portfolio.util.SecurityUtility.currentId;
-
 import com.volodymyr.pletnev.portfolio.models.dto.CountedOrder;
 import com.volodymyr.pletnev.portfolio.models.dto.NotificationRequest;
 import com.volodymyr.pletnev.portfolio.models.dto.NotificationToUserRequest;
-import com.volodymyr.pletnev.portfolio.models.entity.Coin;
 import com.volodymyr.pletnev.portfolio.models.entity.ExchangeOrder;
 import com.volodymyr.pletnev.portfolio.models.entity.Notification;
-import com.volodymyr.pletnev.portfolio.models.entity.User;
-import com.volodymyr.pletnev.portfolio.repository.CoinRepository;
 import com.volodymyr.pletnev.portfolio.repository.NotificationRepository;
-import com.volodymyr.pletnev.portfolio.repository.UserRepository;
 import com.volodymyr.pletnev.portfolio.util.CryptoPortfolioModelMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,11 +18,12 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class NotificationService {
+public class NotificationService extends PartialUpdatingService {
 
 	private static final CryptoPortfolioModelMapper MODEL_MAPPER = CryptoPortfolioModelMapper.INSTANCE;
 
@@ -46,6 +40,22 @@ public class NotificationService {
 		return notificationRepository.save(notification);
 	}
 
+	@Transactional
+	public Notification patch(String id, Map<String,Object> updates) {
+		Notification notification = applyUpdates(getById(id), updates);
+		return notificationRepository.save(notification);
+	}
+
+	@Transactional
+	public void delete(String id) {
+		notificationRepository.deleteById(id);
+	}
+
+	@Transactional
+	public Notification getById(String id) {
+		return notificationRepository.findById(id)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, ""));
+	}
 
 	//todo
 	@Scheduled(fixedDelay = 1000)

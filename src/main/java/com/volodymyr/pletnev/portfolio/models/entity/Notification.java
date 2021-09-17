@@ -1,6 +1,7 @@
 package com.volodymyr.pletnev.portfolio.models.entity;
 
 import com.volodymyr.pletnev.portfolio.models.enums.NotificationType;
+import com.volodymyr.pletnev.portfolio.util.Updatable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -26,15 +27,21 @@ public class Notification extends AbstractEntity implements Serializable {
 	@JoinColumn(name = "exchange_order_id")
 	private ExchangeOrder exchangeOrder;
 	@Digits(integer=12, fraction=20)
+	@Updatable
 	private BigDecimal profitInPercent;
 	@Digits(integer=12, fraction=20)
+	@Updatable
 	private BigDecimal profit;
 	@Digits(integer=12, fraction=20)
+	@Updatable
 	private BigDecimal price;
 	@Digits(integer=12, fraction=20)
+	@Updatable
 	private BigDecimal percentChange1h;
 	@Digits(integer=12, fraction=20)
+	@Updatable
 	private BigDecimal percentChange24h;
 	@Enumerated(EnumType.STRING)
+	@Updatable
 	private NotificationType notificationType;
 }
